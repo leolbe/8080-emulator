@@ -14,6 +14,8 @@ Example programs are provided under `./examples`.
 
 Currently supports all standard instructions and data statements, as well as some pseudo-instructions (see below). Input/output instructions use stdin/stdout (see below). Hardware interrupts are not supported.
 
+NOTE: The assembler is case-insensitive, and all lowercase characters are converted to uppercase before parsing the assembly code.
+
 ### Stack
 
 The stack pointer defaults to the value `0`, which means that any `PUSH` instruction will cause a stack overflow error. Thus, it is recommended to set the stack pointer register at the start of the program, for example by using the `LXI` instruction (`LXI SP, 0FFFFH`).

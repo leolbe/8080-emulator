@@ -13,11 +13,12 @@ pub type AssemblySource<'a> = &'a [u8];
 pub fn parse_assembly(
     source: AssemblySource,
 ) -> Result<(Vec<InstructionOrData>, u16), String> {
-    let mut stream = parsable::ScopedStream::new(source);
+    let source = source.to_ascii_uppercase();
+    let mut stream = parsable::ScopedStream::new(&source);
     let outcome = parsable::WithEnd::<SourceFile>::parse(&mut stream);
     let source_file = match outcome.expect("parsing should give a result") {
         Ok(parsed) => parsed.node,
-        Err(stack) => return Err(format_error_stack(source, stack)),
+        Err(stack) => return Err(format_error_stack(&source, stack)),
     };
     
     let origin_address: Address = if let Some(origin_line) = &source_file.origin_line {

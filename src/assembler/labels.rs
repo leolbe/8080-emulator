@@ -16,7 +16,7 @@ impl LabelLookup {
     }
 
     fn to_label_ident(label: &Label) -> Vec<u8> {
-        label.span[..label.span.len().min(5)].to_owned()
+        label.span.to_owned()
     }
 
     pub fn insert(&mut self, label: Label, address: Address) -> Result<(), ()> {
@@ -47,11 +47,13 @@ pub struct LabelInner {
 enum InitialLabelChar {
     At(CharLiteral<b'@'>),
     QuestionMark(CharLiteral<b'?'>),
+    Underscore(CharLiteral<b'_'>),
     Alpha(CharRange<b'A', b'Z'>),
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Parsable)]
 enum LabelChar {
+    Underscore(CharLiteral<b'_'>),
     Alpha(CharRange<b'A', b'Z'>),
     Numerical(CharRange<b'0', b'9'>),
 }

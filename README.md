@@ -20,7 +20,7 @@ The stack pointer defaults to the value `0`, which means that any `PUSH` instruc
 
 ### Labels
 
-Label names may be 1-5 characters long, and can contain any capital alphabetical or numerical characters, except for the first character, which may be a capital alphabetical character or any of the characters `@` and `?`. Examples:
+Label names may be 1+ characters long, and can contain any capital alphabetical, numerical or underscore (`_`) characters, except for the first character, which may be not be a capital alphabetical character, or any of the characters `_`, `@` and `?`. Examples:
 
 Valid label names: `@MAIN`, `?JUMP`, `ABCDE`, `S1234`, `@`, `ABC`
 

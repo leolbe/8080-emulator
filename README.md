@@ -1,6 +1,6 @@
-# rsoderh-jonsh-leben-emulator
+# 8080-emulator
 
-Semi-functioning Intel 8080 assembler and emulator.
+Intel 8080 assembler and emulator.
 
 ## How to use
 

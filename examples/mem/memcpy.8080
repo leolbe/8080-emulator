@@ -1,0 +1,22 @@
+@MMC:
+    ; memcpy - Copy a section of memory
+    ; regs: ABCDEHL
+    ; args: BC: section length, DE: source address, HL: dest address
+    ; rets: none
+
+    ?MMC0:
+        LDAX D                  ; A <- ((DE))
+        MOV M, A                ; ((HL)) <- A
+
+        INX D                   ; source++
+        INX H                   ; dest++
+
+        DCX B                   ; length--
+
+        MOV A, B
+        ORA C
+        JNZ ?MMC0               ; loop unless B == C == 0
+
+        RET                     ; then return
+
+; @MMC

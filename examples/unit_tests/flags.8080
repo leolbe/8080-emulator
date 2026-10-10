@@ -1,0 +1,119 @@
+;
+; Unit test: Condition flags
+;
+
+@MAI:
+        ; Init
+        LXI SP, 0FFFFH
+
+        ; Carry flag (addition)
+        MVI A, 250
+        MVI B, 10
+        ADD B
+
+        LXI H, SMAI0
+        CNC @FAIL               ; expect carry bit to be set
+
+        ; Carry flag (subtraction with self)
+        MVI A, 10
+        SUB A
+
+        LXI H, SMAI1
+        CC @FAIL               ; expect carry bit to be reset
+
+        ; Carry flag (subtraction with operand)
+        MVI A, 5
+        MVI B, 10
+        SUB B
+
+        LXI H, SMAI2
+        CNC @FAIL               ; expect carry bit to be set
+
+        ; Carry flag (double addition 1)
+        LXI B, 0FF00H
+        LXI H, 000FFH
+        DAD B
+
+        LXI H, SMAI3
+        CC @FAIL                ; expect carry bit to be reset
+
+        ; Carry flag (double addition 2)
+        LXI B, 0FFF0H
+        LXI H, 00010H
+        DAD B
+
+        LXI H, SMAI4
+        CNC @FAIL               ; expect carry bit to be set
+
+        ; Test completed
+        CALL @SCCS
+
+SMAI0:
+    DB 'Carry add'
+    DB 0
+SMAI1:
+    DB 'Carry sub self'
+    DB 0
+SMAI2:
+    DB 'Carry sub op'
+    DB 0
+SMAI3:
+    DB 'Carry dad 1'
+    DB 0
+SMAI4:
+    DB 'Carry dad 2'
+    DB 0
+
+;
+; Test utils
+;
+
+@PRT:
+    ; print a null-terminated string
+    ; regs: A, HL
+    ; args: HL: string address
+    ; rets: nothing
+
+    ?PRT0:
+        MOV A, M        ; read char
+
+        CPI 0           ; if null, return
+        RZ
+
+        OUT 0           ; print
+        
+        INX H
+        JMP ?PRT0       ; loop
+
+@SCCS:
+    ; test succeeded
+    ; regs: A, HL
+    ; args: none
+    ; rets: never
+        LXI H, SSCCS
+        CALL @PRT       ; print SSCCS
+        JMP ?LOOP       ; quit
+SSCCS:
+    DB 'Test succeeded'
+    DB 0
+
+@FAIL:
+    ; test failed
+    ; regs: A, DE, HL
+    ; args: HL: message pointer
+    ; rets: never
+        XCHG            ; DE <-> HL
+        LXI H, SFAIL
+        CALL @PRT       ; print SFAIL
+        XCHG            ; DE <-> HL
+        CALL @PRT       ; print ARG0
+        JMP ?LOOP       ; quit
+SFAIL:
+    DB 'Test failed:'
+    DB 0AH              ; line feed
+    DB 0
+
+?LOOP:
+    JMP ?LOOP
+
+END

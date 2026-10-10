@@ -1,0 +1,102 @@
+;
+; Simple CLI calculator
+;
+
+        LXI SP, 0FFFFH  ; init stack
+
+        CALL @IND
+        MOV A, E
+        OUT 1
+        HLT
+
+
+@MAI:
+        LXI H, SWELC
+        CALL @PRT
+
+    ?MAI0:
+        LXI H, SOP1
+        CALL @PRT
+
+        CALL @IND
+
+        HLT             ; TODO
+
+HLT ; MAI
+
+@PRT:
+    ; print a null-terminated string
+    ; regs: A, HL
+    ; args: HL: string address
+    ; rets: n/a
+
+    ?PRT0:
+        MOV A, M        ; read char
+
+        CPI 0           ; if null, return
+        RZ
+
+        OUT 0           ; print
+        
+        INX H
+        JMP ?PRT0       ; loop
+
+HLT ; PRT
+
+@IND:
+    ; input 1 digit
+    ; regs: A, E, CY
+    ; args: n/A
+    ; rets: E: 0-9, CY if non-numerical
+
+        IN 0
+        
+        CPI 30H         ; '0'
+        JC ?IND0        ; if A < '0'
+
+        CPI 3AH         ; ':'
+        JNC ?IND0       ; if A >= ':'
+
+        MVI E, 30H      ; '0'
+        SUB E
+        MOV E, A
+        RET
+
+    ?IND0:
+        MVI E, 0FFH
+        STC
+        RET
+
+HLT ; IND
+
+@IN9:
+    ; input a 9 digit number
+    ; regs:
+    ; args: n/a
+    ; rets:
+
+    
+
+        HLT         ; TODO
+
+HLT ; IN9
+
+@EXT:
+        HLT
+
+HLT ; EXT
+
+SWELC:  
+    DB 'Welcome to the calculator!'
+    DB 0AH          ; newline
+    DB 0
+
+SOP1:   
+    DB 'Operand 1: '
+    DB 0
+
+SOP2:   
+    DB 'Operand 2: '
+    DB 0
+
+END
